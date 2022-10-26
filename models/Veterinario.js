@@ -53,7 +53,7 @@ veterinarioSchema.pre('save', async function(next) {
 })
 
 veterinarioSchema.methods.comprobarPassword = async function(passwordFormulario) {
-    await bcrypt.compareSync(passwordFormulario, this.password)
+    return await bcrypt.compareSync(passwordFormulario, this.password)
 
 }
 

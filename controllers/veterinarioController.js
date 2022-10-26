@@ -1,6 +1,5 @@
 import Veterinario from "../models/Veterinario.js";
-import bcrypt from 'bcrypt'
-
+import generarJWT from "../helpers/generarJWT.js";
 
 const registrar = async (req, res) => {
     const {email} = req.body
@@ -55,7 +54,6 @@ const confirmar = async (req, res) => {
 const autenticar = async (req, res) => {
 
     const {email, password} = req.body
-    console.log(req.body)
 
     const usuario = await Veterinario.findOne({email})
     if(!usuario){
@@ -77,7 +75,9 @@ const autenticar = async (req, res) => {
     // console.log(await usuario.comprobarPassword(password))
     if(await usuario.comprobarPassword(password)){
         //autenticar
-        
+        console.log('Correcto')
+        res.json({token: generarJWT(usuario.id)})
+
     }else {
         const error = new Error('El password es incorrecto')
         res.status(400).json({
