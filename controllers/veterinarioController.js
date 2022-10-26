@@ -3,7 +3,6 @@ import Veterinario from "../models/Veterinario.js";
 const registrar = async (req, res) => {
     const {email} = req.body
     try {
-
         //revisar si esta duplicado el usuario
         const existeUsuario = await Veterinario.findOne({email})
 
@@ -49,6 +48,29 @@ const confirmar = async (req, res) => {
     } catch (error) {
         console.log(object)
     }
+}
+
+const autenticar = async (req, res) => {
+
+    const {email} = req.body
+
+    const usuario = await Veterinario.findOne({email})
+    if(!usuario){
+        const error = new Error('El usuario no existe')
+        res.status(400).json({
+            msg: error.message
+        })
+    }
+
+    //comprobar si el usuario esta confirmado
+    if(!usuario.confirmado){
+        const error = new Error('Tu cuentan no ha sido confirmada')
+        res.status(400).json({
+            msg: error.message
+        })
+    }
+
+    //autenticas al usuario
     
     
 }
@@ -56,5 +78,6 @@ const confirmar = async (req, res) => {
 export {
     registrar,
     perfil,
-    confirmar
+    confirmar,
+    autenticar
 }
