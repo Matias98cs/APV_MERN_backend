@@ -10,7 +10,7 @@ const app = express()
 app.use(express.json())
 dotenv.config()
 conectarDB()
-const dominiosPermitidos = ["http://127.0.0.1:5173"]
+const dominiosPermitidos = [process.env.FRONTEND_URL]
 const corsOptiones = {
     origin: function(origin, callback) {
         if(dominiosPermitidos.indexOf(origin) !== -1){
