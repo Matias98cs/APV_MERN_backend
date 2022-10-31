@@ -1,6 +1,6 @@
 import nodemailer from "nodemailer";
 
-const emailRegistro = async(datos) => {
+const olvidePasswordUsuario = async(datos) => {
   const transport = nodemailer.createTransport({
     host: process.env.EMAIL_HOST,
     port:  process.env.EMAIL_PORT,
@@ -19,7 +19,7 @@ const emailRegistro = async(datos) => {
     text: 'Restablece tu password',
     html: `<p>Hola: ${nombre}, has solicitado tu password.</p>
             <p>Sigue el siguiente enlace para generaa un nuevo password: </p>
-            <a href="${process.env.FRONTEND_URL}/confirmar/${token}">Comprobar Cuenta<a/></p>
+            <a href="${process.env.FRONTEND_URL}/olvide-password/${token}">Reestablecer Password<a/></p>
             <p>Si tu no creaste esta cuenta, puede ignorar este mensaje</p>
     `
   });
@@ -28,4 +28,4 @@ const emailRegistro = async(datos) => {
 
 };
 
-export default emailRegistro;
+export default olvidePasswordUsuario;

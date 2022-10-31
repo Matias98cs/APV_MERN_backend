@@ -2,6 +2,7 @@ import Veterinario from "../models/Veterinario.js";
 import generarJWT from "../helpers/generarJWT.js";
 import generarId from "../helpers/generarId.js";
 import emailRegistro from "../helpers/emailRegistro.js";
+import olvidePasswordUsuario from "../helpers/emailOlvidePassword.js";
 
 const registrar = async (req, res) => {
     const {email, nombre} = req.body
@@ -34,7 +35,7 @@ const registrar = async (req, res) => {
 
 const perfil = (req, res) => {
     const { veterinario } = req
-    res.json({perfil : veterinario})
+    res.json(veterinario)
 }
 
 const confirmar = async (req, res) => {
@@ -67,7 +68,7 @@ const autenticar = async (req, res) => {
     const usuario = await Veterinario.findOne({email})
     if(!usuario){
         const error = new Error('El usuario no existe')
-        res.status(400).json({
+        return res.status(400).json({
             msg: error.message
         })
     }
@@ -75,7 +76,7 @@ const autenticar = async (req, res) => {
     //comprobar si el usuario esta confirmado
     if(!usuario.confirmado){
         const error = new Error('Tu cuentan no ha sido confirmada')
-        res.status(400).json({
+        return res.status(400).json({
             msg: error.message
         })
     }
@@ -89,7 +90,7 @@ const autenticar = async (req, res) => {
 
     }else {
         const error = new Error('El password es incorrecto')
-        res.status(400).json({
+        return res.status(400).json({
             msg: error.message
         })
     }
@@ -107,6 +108,14 @@ const olvidePassword = async(req, res) => {
     try {
         existeVeterinario.token = generarId()
         await existeVeterinario.save()
+
+        //enviar el email
+        olvidePasswordUsuario({
+            email,
+            nombre: existeVeterinario.nombre,
+            token: existeVeterinario.token
+        })
+
         res.status(200).json({msg: 'Hemos enviado un mensaje con las instrucciones'})
     } catch (error) {
         console.log(error)
@@ -141,7 +150,7 @@ const nuevoPassword = async(req, res) => {
         veterinario.token = null
         veterinario.password = password;
         await veterinario.save()
-        res.status(200).json({msg: 'Modificado Correctamente'})
+        res.status(200).json({msg: 'Password Modificado Correctamente'})
     } catch (error) {
         console.log(error)
     }
