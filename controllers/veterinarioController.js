@@ -3,6 +3,7 @@ import generarJWT from "../helpers/generarJWT.js";
 import generarId from "../helpers/generarId.js";
 import emailRegistro from "../helpers/emailRegistro.js";
 import olvidePasswordUsuario from "../helpers/emailOlvidePassword.js";
+import sendMailToActivate from "../helpers/emailRegistroGoogle.js";
 
 const registrar = async (req, res) => {
     const {email, nombre} = req.body
@@ -18,11 +19,12 @@ const registrar = async (req, res) => {
         const veterinarioGuardado = await veneterinario.save()
 
         //enviar el emails
-        emailRegistro({
-            email,
-            nombre,
-            token: veterinarioGuardado.token
-        })
+        // emailRegistro({
+        //     email,
+        //     nombre,
+        //     token: veterinarioGuardado.token
+        // })
+        sendMailToActivate({email, nombre, token: veterinarioGuardado.token})
 
         res.json({
             msg : 'Registrando usuario',
